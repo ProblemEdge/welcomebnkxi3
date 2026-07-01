@@ -2,6 +2,12 @@ import { NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 import { randomInt } from "crypto";
 
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
 // 9桁ID生成（重複回避つき）
 async function generatePlayerId() {
   while (true) {
