@@ -1,12 +1,19 @@
 import { NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 
-
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
 };
+
+// ブラウザからの検証アクセス (OPTIONS) を通すためのハンドラーを追加
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: CORS_HEADERS,
+  });
+}
 
 export async function POST(req: Request) {
   const { game_id, player_id } = await req.json();
@@ -22,7 +29,8 @@ export async function POST(req: Request) {
     `;
 
     if (p1.length > 0) {
-      return NextResponse.json({ slot: "p1" });
+      // CORSヘッダーを付与して返却
+      return NextResponse.json({ slot: "p1" }, { headers: CORS_HEADERS });
     }
 
     // p1ダメならp2
@@ -35,12 +43,14 @@ export async function POST(req: Request) {
     `;
 
     if (p2.length > 0) {
-      return NextResponse.json({ slot: "p2" });
+      // CORSヘッダーを付与して返却
+      return NextResponse.json({ slot: "p2" }, { headers: CORS_HEADERS });
     }
 
-    return NextResponse.json({ error: "full" }, { status: 400 });
+    // すでに埋まっている場合
+    return NextResponse.json({ error: "full" }, { status: 400, headers: CORS_HEADERS });
 
   } catch (e) {
-    return NextResponse.json({ error: "db error" }, { status: 500 });
+    return NextResponse.json({ error: "db error" }, { status: 500, headers: CORS_HEADERS });
   }
 }
