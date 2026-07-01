@@ -17,7 +17,7 @@ export async function POST() {
       UPDATE games
       SET p1_id = NULL,
           p2_id = NULL,
-          status = 'waiting',
+          status = 'waiting'
     `;
 
     return NextResponse.json(
